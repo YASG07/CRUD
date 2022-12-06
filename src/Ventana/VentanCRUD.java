@@ -4,6 +4,7 @@
  */
 package Ventana;
 
+//importamos la clase del paquete con los metodo relacionados a la base de datos
 import Clases.ConexionMySQL;
 
 /**
@@ -12,14 +13,16 @@ import Clases.ConexionMySQL;
  */
 public class VentanCRUD extends javax.swing.JFrame {
 
+    //creamos una instancia de dicha clase para acceder a los metodos de la clase
     ConexionMySQL CMSQL;
     /**
      * Creates new form VentanCRUD
      */
     public VentanCRUD() {
         initComponents();
+    //inicializamos la instancia de la clase y ejecutamos su constructor iniciando la conexión con la base de datos
         CMSQL = new ConexionMySQL();
-    }
+    }//constructor
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -41,6 +44,8 @@ public class VentanCRUD extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TblDiscografia = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -49,21 +54,51 @@ public class VentanCRUD extends javax.swing.JFrame {
 
         BtnInsertar.setText("Insertar");
         BtnInsertar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        BtnInsertar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnInsertarActionPerformed(evt);
+            }
+        });
 
         BtnConsultar.setText("Consultar");
         BtnConsultar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        BtnConsultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnConsultarActionPerformed(evt);
+            }
+        });
 
         BtnActualizar.setText("Actualizar");
         BtnActualizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        BtnActualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnActualizarActionPerformed(evt);
+            }
+        });
 
         BtnEliminar.setText("Eliminar");
         BtnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        BtnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnEliminarActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Ultimo Album:");
 
         jLabel2.setText("Album Debut:");
 
         jLabel3.setText("Banda:");
+
+        TblDiscografia.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane1.setViewportView(TblDiscografia);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -83,13 +118,16 @@ public class VentanCRUD extends javax.swing.JFrame {
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(49, 49, 49)
-                        .addComponent(BtnInsertar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(67, 67, 67)
-                        .addComponent(BtnConsultar)
-                        .addGap(77, 77, 77)
-                        .addComponent(BtnActualizar)
-                        .addGap(52, 52, 52)
-                        .addComponent(BtnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(BtnInsertar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(67, 67, 67)
+                                .addComponent(BtnConsultar)
+                                .addGap(77, 77, 77)
+                                .addComponent(BtnActualizar)
+                                .addGap(52, 52, 52)
+                                .addComponent(BtnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(69, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -113,7 +151,9 @@ public class VentanCRUD extends javax.swing.JFrame {
                     .addComponent(BtnConsultar)
                     .addComponent(BtnActualizar)
                     .addComponent(BtnEliminar))
-                .addContainerGap(222, Short.MAX_VALUE))
+                .addGap(37, 37, 37)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -129,6 +169,26 @@ public class VentanCRUD extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void BtnInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnInsertarActionPerformed
+    //haciendo uso de la instancia de la clase ejecutamos el metodo insercion con los parametros de las cajas de texto
+        CMSQL.insercion(TxtBanda.getText(), TxtAlbumD.getText(), TxtUAlbum.getText(), this);
+    }//GEN-LAST:event_BtnInsertarActionPerformed
+
+    private void BtnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnConsultarActionPerformed
+    //haciendo uso de la instancia de la clase ejecutamos el metodo consulta con los parametros de las cajas de texto
+        CMSQL.consulta(TxtAlbumD.getText(), TxtUAlbum.getText(), this);
+    }//GEN-LAST:event_BtnConsultarActionPerformed
+
+    private void BtnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnActualizarActionPerformed
+    //haciendo uso de la instancia de la clase ejecutamos el metodo update con los parametros de las cajas de texto 
+        CMSQL.update(TxtUAlbum.getText(), TxtBanda.getText(), this);
+    }//GEN-LAST:event_BtnActualizarActionPerformed
+
+    private void BtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEliminarActionPerformed
+    //haciendo uso de la instancia de la clase ejecutamos el metodo delete con los parametros de las cajas de texto
+        CMSQL.delete(TxtBanda.getText(), this);
+    }//GEN-LAST:event_BtnEliminarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -170,6 +230,7 @@ public class VentanCRUD extends javax.swing.JFrame {
     private javax.swing.JButton BtnConsultar;
     private javax.swing.JButton BtnEliminar;
     private javax.swing.JButton BtnInsertar;
+    private javax.swing.JTable TblDiscografia;
     private javax.swing.JTextField TxtAlbumD;
     private javax.swing.JTextField TxtBanda;
     private javax.swing.JTextField TxtUAlbum;
@@ -177,5 +238,6 @@ public class VentanCRUD extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

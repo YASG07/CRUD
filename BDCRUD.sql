@@ -20,4 +20,7 @@ INSERT INTO Banda (ID_Banda, Nom_Banda, Album_Debut, Album_Ultimo)
            
 -- Consultamos dichos datos --
 SELECT * FROM Banda;
+
+-- Borramos la base de datos en caso de ser necesario o para comenzar a contar el ID desde cero otra vez --
+DROP DATABASE IF EXISTS DiscografiaPF;
                                   

@@ -42,8 +42,10 @@ public class ConexionMySQL {
     }//metodo conectar a base de datos
     
     //Recibe como parametro el nombre de la banda junto con el de su primer y ultimo album
-    public static void insercion(String Nombre, String AlbumD, String AlbumU, JFrame JF){
+    public void insercion(String Nombre, String AlbumD, String AlbumU, JFrame JF){
         try {
+            //inicializamos la variable de tipo statemente
+            st = con.createStatement();
             //Ejecuta la sentencia DML INSERT INTO con los parametros recibidos
             st.executeUpdate("INSERT INTO Banda (ID_Banda, Nom_Banda, Album_Debut, Album_Ultimo) " +
              "VALUES (DEFAULT, "+" '" + Nombre +"', '"+ AlbumD +"', '" + AlbumU +"')"); 
@@ -57,10 +59,11 @@ public class ConexionMySQL {
     }//Registro
     
     //Recie dos parametros como filtro Nombre del album debut y del ultimo album de la banda a buscar
-    public static void consulta(String AD, String AU, JFrame JF){
+    public void consulta(String AD, String AU, JFrame JF){
         int ID = 0;
         String Nombres [] = new String [3];
         try {
+            //inicializamos la variable de tipo statemente
             st = con.createStatement();
             String query = "SELECT * FROm Banda WHERE "
                     + "Album_Debut = '"+ AD +"' AND Album_Ultimo = '"+ AU +"'";
@@ -83,8 +86,10 @@ public class ConexionMySQL {
     }//READ
     
     //recibe doss parametros el nombre del nuevo album y el nombre de la banda cuyo registrro será modificado
-    public static void update(String New_UAlbum, String Nombre, JFrame JF){
+    public void update(String New_UAlbum, String Nombre, JFrame JF){
         try {
+            //inicializamos la variable de tipo statemente
+            st = con.createStatement();
             //Ejecuta la sentencia DML UPDATE con los parametros recibidos
             st.executeUpdate("UPDATE Banda SET Album_Ultimo = '"+New_UAlbum+"' WHERE Nom_Banda = '"+Nombre+"'");
         } catch (SQLException ex) {
@@ -97,8 +102,10 @@ public class ConexionMySQL {
     }//UPDATE
     
     //recibe un unico parametro el nombre de la banda cuyo registro será borrado
-    public static void delete(String Nombre, JFrame JF){
+    public void delete(String Nombre, JFrame JF){
         try {
+            //inicializamos la variable de tipo statemente
+            st = con.createStatement();
             //Ejecuta la sentencia DML DELETE con los parametros recibidos
             st.executeUpdate("DELETE FROM Banda WHERE Nom_Banda = '"+Nombre+"'");
         } catch (SQLException ex) {
