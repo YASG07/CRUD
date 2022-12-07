@@ -34,6 +34,9 @@ public class VentanCRUD extends javax.swing.JFrame {
         initComponents();
     //inicializamos la instancia de la clase y ejecutamos su constructor iniciando la conexión con la base de datos
         CMSQL = new ConexionMySQL();
+        //Asi podemos ver el estado actual de la conexión con la BD
+        LblEstado.setForeground(new Color(30, 180, 0));
+        LblEstado.setText(CMSQL.comprobarConexion(this));
         //hacemos uso del metodo para visualizar los datos en la base de datos
         llenarTabla();
     }//constructor
@@ -60,12 +63,15 @@ public class VentanCRUD extends javax.swing.JFrame {
         LblBanda = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TblDiscografia = new javax.swing.JTable();
+        LblEstado = new javax.swing.JLabel();
+        BtnListado = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(130, 170, 180));
         jPanel1.setForeground(new java.awt.Color(0, 0, 255));
 
+        BtnInsertar.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
         BtnInsertar.setText("Insertar");
         BtnInsertar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         BtnInsertar.addActionListener(new java.awt.event.ActionListener() {
@@ -74,6 +80,7 @@ public class VentanCRUD extends javax.swing.JFrame {
             }
         });
 
+        BtnConsultar.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
         BtnConsultar.setText("Consultar");
         BtnConsultar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         BtnConsultar.addActionListener(new java.awt.event.ActionListener() {
@@ -82,6 +89,7 @@ public class VentanCRUD extends javax.swing.JFrame {
             }
         });
 
+        BtnActualizar.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
         BtnActualizar.setText("Actualizar");
         BtnActualizar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         BtnActualizar.addActionListener(new java.awt.event.ActionListener() {
@@ -90,6 +98,7 @@ public class VentanCRUD extends javax.swing.JFrame {
             }
         });
 
+        BtnEliminar.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
         BtnEliminar.setText("Eliminar");
         BtnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         BtnEliminar.addActionListener(new java.awt.event.ActionListener() {
@@ -98,12 +107,16 @@ public class VentanCRUD extends javax.swing.JFrame {
             }
         });
 
+        LblUAlbum.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
         LblUAlbum.setText("Ultimo Album:");
 
+        LblADebut.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
         LblADebut.setText("Album Debut:");
 
+        LblBanda.setFont(new java.awt.Font("Times New Roman", 0, 12)); // NOI18N
         LblBanda.setText("Banda:");
 
+        TblDiscografia.setFont(new java.awt.Font("Times New Roman", 0, 14)); // NOI18N
         TblDiscografia.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -114,6 +127,23 @@ public class VentanCRUD extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(TblDiscografia);
 
+        LblEstado.setFont(new java.awt.Font("Verdana", 1, 14)); // NOI18N
+        LblEstado.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        LblEstado.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                LblEstadoMouseClicked(evt);
+            }
+        });
+
+        BtnListado.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
+        BtnListado.setText("Listado");
+        BtnListado.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        BtnListado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BtnListadoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -121,7 +151,8 @@ public class VentanCRUD extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(190, 190, 190)
+                        .addComponent(LblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(59, 59, 59)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(TxtBanda, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
                             .addComponent(TxtAlbumD)
@@ -131,24 +162,27 @@ public class VentanCRUD extends javax.swing.JFrame {
                             .addComponent(LblUAlbum, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(49, 49, 49)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 502, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 512, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(BtnInsertar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(67, 67, 67)
+                                .addGap(18, 18, 18)
                                 .addComponent(BtnConsultar)
-                                .addGap(77, 77, 77)
+                                .addGap(38, 38, 38)
+                                .addComponent(BtnListado)
+                                .addGap(39, 39, 39)
                                 .addComponent(BtnActualizar)
-                                .addGap(52, 52, 52)
-                                .addComponent(BtnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(69, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(BtnEliminar)))))
+                .addContainerGap(59, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(LblBanda)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(LblBanda)
+                    .addComponent(LblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(TxtBanda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(LblADebut)
@@ -163,10 +197,11 @@ public class VentanCRUD extends javax.swing.JFrame {
                     .addComponent(BtnInsertar)
                     .addComponent(BtnConsultar)
                     .addComponent(BtnActualizar)
-                    .addComponent(BtnEliminar))
-                .addGap(37, 37, 37)
+                    .addComponent(BtnEliminar)
+                    .addComponent(BtnListado))
+                .addGap(38, 38, 38)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(20, Short.MAX_VALUE))
+                .addContainerGap(15, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -216,7 +251,9 @@ public class VentanCRUD extends javax.swing.JFrame {
             return;
     }//validación si algún campo esta vacío
     //haciendo uso de la instancia de la clase ejecutamos el metodo consulta con los parametros de las cajas de texto
-        CMSQL.consulta(TxtAlbumD.getText(), TxtUAlbum.getText(), this);
+        vaciarTabla();
+        Tabla = (DefaultTableModel) TblDiscografia.getModel();
+        Tabla.addRow(CMSQL.consulta(TxtAlbumD.getText(), TxtUAlbum.getText(), this));
     }//GEN-LAST:event_BtnConsultarActionPerformed
 
     private void BtnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnActualizarActionPerformed
@@ -254,6 +291,28 @@ public class VentanCRUD extends javax.swing.JFrame {
         //hacemos uso del metodo para visualizar los datos en la base de datos
         llenarTabla();
     }//GEN-LAST:event_BtnEliminarActionPerformed
+
+    private void LblEstadoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_LblEstadoMouseClicked
+    if(LblEstado.getText().equals("Conectado")){
+        try {
+            con.close();
+        } catch (SQLException ex) {
+            showMessageDialog(this, "Error al desconectar: " + ex);
+        }
+        LblEstado.setForeground(Color.red);
+        LblEstado.setText("Desconectado");
+    }//si esta conectado lo desconecta
+    else{
+        CMSQL = new ConexionMySQL();
+        LblEstado.setForeground(new Color(30, 180, 0));
+        LblEstado.setText(CMSQL.comprobarConexion(this));
+    }//Si esta desconectado volvemos a establecer la conexión
+    }//GEN-LAST:event_LblEstadoMouseClicked
+
+    private void BtnListadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnListadoActionPerformed
+        vaciarTabla();
+        llenarTabla();
+    }//GEN-LAST:event_BtnListadoActionPerformed
 
     private void llenarTabla(){
         //Inicializamos la tabla con un modelo
@@ -339,8 +398,10 @@ public class VentanCRUD extends javax.swing.JFrame {
     private javax.swing.JButton BtnConsultar;
     private javax.swing.JButton BtnEliminar;
     private javax.swing.JButton BtnInsertar;
+    private javax.swing.JButton BtnListado;
     private javax.swing.JLabel LblADebut;
     private javax.swing.JLabel LblBanda;
+    private javax.swing.JLabel LblEstado;
     private javax.swing.JLabel LblUAlbum;
     private javax.swing.JTable TblDiscografia;
     private javax.swing.JTextField TxtAlbumD;

@@ -4,6 +4,7 @@
  */
 package Clases;
 
+import java.io.IOException;
 import java.sql.Statement;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,6 +13,9 @@ import java.sql.ResultSet;
 import javax.swing.JFrame;
 import static javax.swing.JOptionPane.showMessageDialog;
 //Importaciones para conectar con mysql
+import java.net.Socket;
+//Importamos el socket para combrobar la conexion
+
 /**
  *
  * @author Lenovo
@@ -59,30 +63,27 @@ public class ConexionMySQL {
     }//Registro
     
     //Recie dos parametros como filtro Nombre del album debut y del ultimo album de la banda a buscar
-    public void consulta(String AD, String AU, JFrame JF){
-        int ID = 0;
-        String Nombres [] = new String [3];
+    public Object[] consulta(String AD, String AU, JFrame JF){
+        Object Nombres [] = new Object [4];
         try {
             //inicializamos la variable de tipo statemente
             st = con.createStatement();
             String query = "SELECT * FROm Banda WHERE "
-                    + "Album_Debut = '" + AD + "' AND Album_Ultimo = '" + AU + "'";
+                    + "Album_Debut LIKE '" + AD + "%' AND Album_Ultimo LIKE '" + AU + "%'";
             //Ejecuta la sentencia SELECT con los parametros recibidos
             ResultSet rs = st.executeQuery(query);
             while(rs.next()){
-                ID = rs.getInt(1);
-                Nombres[0] = rs.getString(2);
-                Nombres[1] = rs.getString(3);
-                Nombres[2] = rs.getString(4);
+                Nombres[0] = rs.getInt(1);
+                Nombres[1] = rs.getString(2);
+                Nombres[2] = rs.getString(3);
+                Nombres[3] = rs.getString(4);
             }//ciclo while guarda los valores obtenidos de la consulta en las varibables que se muestran.
         } catch (SQLException ex) {
             //El parametro JF se refiere a una ventana padre para lanzar el mensaje
             showMessageDialog(JF, "Error en "+ex);
-            return;
             //En caso de encontrar dicha excepción envia un mensaje y termina el bloque
         }//error en la sentencia SQL
-        showMessageDialog(JF, "ID = " + ID + "\n Nombre = " + Nombres[0] + 
-                        "\n Album Debut = " + Nombres[1] + "\n Ultimo Album = " + Nombres[2]);
+        return Nombres;
     }//READ
     
     //recibe doss parametros el nombre del nuevo album y el nombre de la banda cuyo registrro será modificado
@@ -117,4 +118,18 @@ public class ConexionMySQL {
         showMessageDialog(JF, "Eliminado con éxito");
     }//DELETE
     
-}
+    public String comprobarConexion(JFrame JF){
+        String dir = "";
+        int puerto = 3306;
+        try {
+            Socket s = new Socket(dir, puerto);
+            if (s.isConnected()){
+                return "Conectado";
+            }//if
+        } catch (IOException ex) {
+            showMessageDialog(JF, "Error en: " + ex);
+        }//cacth
+        return "Desconectado";
+    }//metodo para comprobar la conexión
+    
+}//clase
