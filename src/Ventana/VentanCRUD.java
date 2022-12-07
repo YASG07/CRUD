@@ -6,13 +6,24 @@ package Ventana;
 
 //importamos la clase del paquete con los metodo relacionados a la base de datos
 import Clases.ConexionMySQL;
+import static Clases.ConexionMySQL.con;
+import static Clases.ConexionMySQL.st;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import static javax.swing.JOptionPane.showMessageDialog;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
  * @author Lenovo
  */
 public class VentanCRUD extends javax.swing.JFrame {
-
+    
+    //declaramos un modelo de tabla por defecto
+    private DefaultTableModel Tabla;
+    
     //creamos una instancia de dicha clase para acceder a los metodos de la clase
     ConexionMySQL CMSQL;
     /**
@@ -22,6 +33,8 @@ public class VentanCRUD extends javax.swing.JFrame {
         initComponents();
     //inicializamos la instancia de la clase y ejecutamos su constructor iniciando la conexión con la base de datos
         CMSQL = new ConexionMySQL();
+        //hacemos uso del metodo para visualizar los datos en la base de datos
+        llenarTabla();
     }//constructor
 
     /**
@@ -41,9 +54,9 @@ public class VentanCRUD extends javax.swing.JFrame {
         TxtBanda = new javax.swing.JTextField();
         TxtAlbumD = new javax.swing.JTextField();
         TxtUAlbum = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        LblUAlbum = new javax.swing.JLabel();
+        LblADebut = new javax.swing.JLabel();
+        LblBanda = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         TblDiscografia = new javax.swing.JTable();
 
@@ -84,18 +97,18 @@ public class VentanCRUD extends javax.swing.JFrame {
             }
         });
 
-        jLabel1.setText("Ultimo Album:");
+        LblUAlbum.setText("Ultimo Album:");
 
-        jLabel2.setText("Album Debut:");
+        LblADebut.setText("Album Debut:");
 
-        jLabel3.setText("Banda:");
+        LblBanda.setText("Banda:");
 
         TblDiscografia.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-
+                "ID", "Banda", "Album Debut", "Ultimo Album"
             }
         ));
         jScrollPane1.setViewportView(TblDiscografia);
@@ -108,14 +121,13 @@ public class VentanCRUD extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(190, 190, 190)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(TxtBanda, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
-                                .addComponent(TxtAlbumD)
-                                .addComponent(TxtUAlbum))
-                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(TxtBanda, javax.swing.GroupLayout.DEFAULT_SIZE, 237, Short.MAX_VALUE)
+                            .addComponent(TxtAlbumD)
+                            .addComponent(TxtUAlbum)
+                            .addComponent(LblBanda, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(LblADebut, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(LblUAlbum, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(49, 49, 49)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -134,15 +146,15 @@ public class VentanCRUD extends javax.swing.JFrame {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addGap(22, 22, 22)
-                .addComponent(jLabel3)
+                .addComponent(LblBanda)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(TxtBanda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
+                .addComponent(LblADebut)
                 .addGap(4, 4, 4)
                 .addComponent(TxtAlbumD, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel1)
+                .addComponent(LblUAlbum)
                 .addGap(4, 4, 4)
                 .addComponent(TxtUAlbum, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(35, 35, 35)
@@ -171,25 +183,110 @@ public class VentanCRUD extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnInsertarActionPerformed
+        reinicarLabels();
+        if(TxtBanda.getText().equals("") || TxtAlbumD.getText().equals("") || TxtUAlbum.getText().equals("")){
+            //Envia como mensaje que campos deben de rellenarse para completar la acción
+            LblBanda.setText(LblBanda.getText() + " Campo requerido");
+            LblADebut.setText(LblADebut.getText() + " Campo requerido");
+            LblUAlbum.setText(LblUAlbum.getText() + " Campo requerido");
+            //evita que se ejecute las siguiente lineas de codigo
+            return;
+    }//validación si algún campo esta vacío
     //haciendo uso de la instancia de la clase ejecutamos el metodo insercion con los parametros de las cajas de texto
         CMSQL.insercion(TxtBanda.getText(), TxtAlbumD.getText(), TxtUAlbum.getText(), this);
+        //hacemos uso del metodo para vaciar la tabla para después recargarla
+        vaciarTabla();
+        //hacemos uso del metodo para visualizar los datos en la base de datos
+        llenarTabla();
     }//GEN-LAST:event_BtnInsertarActionPerformed
 
     private void BtnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnConsultarActionPerformed
+        reinicarLabels();
+        if(TxtAlbumD.getText().equals("") || TxtUAlbum.getText().equals("")){
+            //Envia como mensaje que campos deben de rellenarse para completar la acción
+            LblADebut.setText(LblADebut.getText() + " Campo requerido");
+            LblUAlbum.setText(LblUAlbum.getText() + " Campo requerido");
+            //evita que se ejecute las siguiente lineas de codigo
+            return;
+    }//validación si algún campo esta vacío
     //haciendo uso de la instancia de la clase ejecutamos el metodo consulta con los parametros de las cajas de texto
         CMSQL.consulta(TxtAlbumD.getText(), TxtUAlbum.getText(), this);
     }//GEN-LAST:event_BtnConsultarActionPerformed
 
     private void BtnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnActualizarActionPerformed
+        reinicarLabels();
+        if(TxtBanda.getText().equals("") || TxtUAlbum.getText().equals("")){
+            //Envia como mensaje que campos deben de rellenarse para completar la acción
+            LblBanda.setText(LblBanda.getText() + " Campo requerido");
+            LblUAlbum.setText(LblUAlbum.getText() + " Campo requerido");
+            //evita que se ejecute las siguiente lineas de codigo
+            return;
+    }//validación si algún campo esta vacío
     //haciendo uso de la instancia de la clase ejecutamos el metodo update con los parametros de las cajas de texto 
         CMSQL.update(TxtUAlbum.getText(), TxtBanda.getText(), this);
+        //hacemos uso del metodo para vaciar la tabla para después recargarla
+        vaciarTabla();
+        //hacemos uso del metodo para visualizar los datos en la base de datos
+        llenarTabla();
     }//GEN-LAST:event_BtnActualizarActionPerformed
 
     private void BtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEliminarActionPerformed
+        reinicarLabels();
+        if(TxtBanda.getText().equals("")){
+            //Envia como mensaje que campos deben de rellenarse para completar la acción
+            LblBanda.setText(LblBanda.getText() + " Campo requerido");
+            //evita que se ejecute las siguiente lineas de codigo
+            return;
+    }//validación si algún campo esta vacío
     //haciendo uso de la instancia de la clase ejecutamos el metodo delete con los parametros de las cajas de texto
         CMSQL.delete(TxtBanda.getText(), this);
+        //hacemos uso del metodo para vaciar la tabla para después recargarla
+        vaciarTabla();
+        //hacemos uso del metodo para visualizar los datos en la base de datos
+        llenarTabla();
     }//GEN-LAST:event_BtnEliminarActionPerformed
 
+    private void llenarTabla(){
+        //Inicializamos la tabla con un modelo
+        Tabla = (DefaultTableModel) TblDiscografia.getModel();
+        //arreglo para almacenar el resultado de cada campo
+        Object [] row = new Object[4];
+        try {
+            //inicializamos la variable de tipo statemente
+            st = con.createStatement();
+            String query = "SELECT * FROM Banda";
+            //Ejecuta la sentencia SELECT con los parametros recibidos
+            ResultSet rs = st.executeQuery(query);
+            while(rs.next()){
+                row[0] = rs.getInt(1);
+                row[1] = rs.getString(2);
+                row[2] = rs.getString(3);
+                row[3] = rs.getString(4);
+                Tabla.addRow(row);
+            }//ciclo while guarda los valores obtenidos de la consulta en las varibables que se muestran.
+        } catch (SQLException ex) {
+            showMessageDialog(this, "Error en "+ex);
+            System.exit(EXIT_ON_CLOSE);
+            //En caso de encontrar dicha excepción envia un mensaje y termina el bloque
+        }//error en la sentencia SQL
+    }//metodo para llenar la tabla donde se visualizan los datos
+    
+    private void vaciarTabla(){
+        //Inicializamos la tabla con un modelo
+        Tabla = (DefaultTableModel) TblDiscografia.getModel();
+        int i = 0;
+        while(i < Tabla.getRowCount()){
+            Tabla.removeRow(i);
+        }//metodo while para remover los renglones de la tabla
+    }//metodo para vaciar la tabla
+    
+    private void reinicarLabels(){
+        //reestablecen las etiquetas
+        LblBanda.setText("Banda:");
+        LblADebut.setText("Album Debut:");
+        LblUAlbum.setText("Ultimo Album;");
+    }//metodo para devoler los valores por defecto de las etiquetas
+    
     /**
      * @param args the command line arguments
      */
@@ -230,13 +327,13 @@ public class VentanCRUD extends javax.swing.JFrame {
     private javax.swing.JButton BtnConsultar;
     private javax.swing.JButton BtnEliminar;
     private javax.swing.JButton BtnInsertar;
+    private javax.swing.JLabel LblADebut;
+    private javax.swing.JLabel LblBanda;
+    private javax.swing.JLabel LblUAlbum;
     private javax.swing.JTable TblDiscografia;
     private javax.swing.JTextField TxtAlbumD;
     private javax.swing.JTextField TxtBanda;
     private javax.swing.JTextField TxtUAlbum;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables

@@ -48,13 +48,13 @@ public class ConexionMySQL {
             st = con.createStatement();
             //Ejecuta la sentencia DML INSERT INTO con los parametros recibidos
             st.executeUpdate("INSERT INTO Banda (ID_Banda, Nom_Banda, Album_Debut, Album_Ultimo) " +
-             "VALUES (DEFAULT, "+" '" + Nombre +"', '"+ AlbumD +"', '" + AlbumU +"')"); 
+             "VALUES (DEFAULT, " + " '" + Nombre + "', '" + AlbumD + "', '" + AlbumU + "')"); 
         } catch (SQLException ex) {
             //El parametro JF se refiere a una ventana padre para lanzar el mensaje
             showMessageDialog(JF, "Ocurrio un error inesperado "+ex);
             return;
             //En caso de encontrar dicha excepción envia un mensaje y termina el bloque
-        } 
+        }//error en la sentencia SQL
         showMessageDialog(JF, "Registrado con éxito.");
     }//Registro
     
@@ -66,7 +66,7 @@ public class ConexionMySQL {
             //inicializamos la variable de tipo statemente
             st = con.createStatement();
             String query = "SELECT * FROm Banda WHERE "
-                    + "Album_Debut = '"+ AD +"' AND Album_Ultimo = '"+ AU +"'";
+                    + "Album_Debut = '" + AD + "' AND Album_Ultimo = '" + AU + "'";
             //Ejecuta la sentencia SELECT con los parametros recibidos
             ResultSet rs = st.executeQuery(query);
             while(rs.next()){
@@ -80,9 +80,9 @@ public class ConexionMySQL {
             showMessageDialog(JF, "Error en "+ex);
             return;
             //En caso de encontrar dicha excepción envia un mensaje y termina el bloque
-        }
-        showMessageDialog(JF, "ID = " + ID +"\n Nombre = "+ Nombres[0] + 
-                        "\n Album Debut = "+ Nombres[1] + "\n Ultimo Album = " + Nombres[2]);
+        }//error en la sentencia SQL
+        showMessageDialog(JF, "ID = " + ID + "\n Nombre = " + Nombres[0] + 
+                        "\n Album Debut = " + Nombres[1] + "\n Ultimo Album = " + Nombres[2]);
     }//READ
     
     //recibe doss parametros el nombre del nuevo album y el nombre de la banda cuyo registrro será modificado
@@ -91,13 +91,13 @@ public class ConexionMySQL {
             //inicializamos la variable de tipo statemente
             st = con.createStatement();
             //Ejecuta la sentencia DML UPDATE con los parametros recibidos
-            st.executeUpdate("UPDATE Banda SET Album_Ultimo = '"+New_UAlbum+"' WHERE Nom_Banda = '"+Nombre+"'");
+            st.executeUpdate("UPDATE Banda SET Album_Ultimo = '"+New_UAlbum+"' WHERE Nom_Banda = '" + Nombre + "'");
         } catch (SQLException ex) {
             //El parametro JF se refiere a una ventana padre para lanzar el mensaje
             showMessageDialog(JF, "Ocurrio un error inesperado "+ex);
             return;
             //En caso de encontrar dicha excepción envia un mensaje y termina el bloque
-        }
+        }//error en la sentencia SQL
         showMessageDialog(JF, "Actualizado con éxito");
     }//UPDATE
     
@@ -107,13 +107,13 @@ public class ConexionMySQL {
             //inicializamos la variable de tipo statemente
             st = con.createStatement();
             //Ejecuta la sentencia DML DELETE con los parametros recibidos
-            st.executeUpdate("DELETE FROM Banda WHERE Nom_Banda = '"+Nombre+"'");
+            st.executeUpdate("DELETE FROM Banda WHERE Nom_Banda = '" + Nombre + "'");
         } catch (SQLException ex) {
             //El parametro JF se refiere a una ventana padre para lanzar el mensaje
-            showMessageDialog(JF, "Ocurrio un error inesperado "+ex);
+            showMessageDialog(JF, "Ocurrio un error inesperado " + ex);
             return;
             //En caso de encontrar dicha excepción envia un mensaje y termina el bloque
-        }
+        }//error en la sentencia SQL
         showMessageDialog(JF, "Eliminado con éxito");
     }//DELETE
     

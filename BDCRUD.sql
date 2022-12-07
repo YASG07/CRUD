@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS Banda (ID_Banda INT PRIMARY KEY AUTO_INCREMENT,
  
 -- Insertamos datos de prueba en la tabla Banda --
 INSERT INTO Banda (ID_Banda, Nom_Banda, Album_Debut, Album_Ultimo)
-	VALUES (DEFAULT, 'Exodus', 'Bounded By Blood', 'Persona Non Grata'),
+	VALUES (DEFAULT, 'Exodus', 'Bonded By Blood', 'Persona Non Grata'),
 		   (DEFAULT, 'Megadeth', 'Killing is My Businees... And Busines is Good', 'The Sick, The Dying... And The Dead'),
            (DEFAULT, 'Metallica', 'Kill ´em All', 'Hardwired... To Selft-Destruct'),
            (DEFAULT, 'Slayer', 'Show No Mercy', 'Repentless'),
