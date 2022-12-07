@@ -8,6 +8,7 @@ package Ventana;
 import Clases.ConexionMySQL;
 import static Clases.ConexionMySQL.con;
 import static Clases.ConexionMySQL.st;
+import java.awt.Color;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -185,6 +186,9 @@ public class VentanCRUD extends javax.swing.JFrame {
     private void BtnInsertarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnInsertarActionPerformed
         reinicarLabels();
         if(TxtBanda.getText().equals("") || TxtAlbumD.getText().equals("") || TxtUAlbum.getText().equals("")){
+            LblBanda.setForeground(Color.red);
+            LblADebut.setForeground(Color.red);
+            LblUAlbum.setForeground(Color.red);
             //Envia como mensaje que campos deben de rellenarse para completar la acción
             LblBanda.setText(LblBanda.getText() + " Campo requerido");
             LblADebut.setText(LblADebut.getText() + " Campo requerido");
@@ -203,6 +207,8 @@ public class VentanCRUD extends javax.swing.JFrame {
     private void BtnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnConsultarActionPerformed
         reinicarLabels();
         if(TxtAlbumD.getText().equals("") || TxtUAlbum.getText().equals("")){
+            LblADebut.setForeground(Color.red);
+            LblUAlbum.setForeground(Color.red);
             //Envia como mensaje que campos deben de rellenarse para completar la acción
             LblADebut.setText(LblADebut.getText() + " Campo requerido");
             LblUAlbum.setText(LblUAlbum.getText() + " Campo requerido");
@@ -216,6 +222,8 @@ public class VentanCRUD extends javax.swing.JFrame {
     private void BtnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnActualizarActionPerformed
         reinicarLabels();
         if(TxtBanda.getText().equals("") || TxtUAlbum.getText().equals("")){
+            LblBanda.setForeground(Color.red);
+            LblUAlbum.setForeground(Color.red);
             //Envia como mensaje que campos deben de rellenarse para completar la acción
             LblBanda.setText(LblBanda.getText() + " Campo requerido");
             LblUAlbum.setText(LblUAlbum.getText() + " Campo requerido");
@@ -233,6 +241,7 @@ public class VentanCRUD extends javax.swing.JFrame {
     private void BtnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnEliminarActionPerformed
         reinicarLabels();
         if(TxtBanda.getText().equals("")){
+            LblBanda.setForeground(Color.red);
             //Envia como mensaje que campos deben de rellenarse para completar la acción
             LblBanda.setText(LblBanda.getText() + " Campo requerido");
             //evita que se ejecute las siguiente lineas de codigo
@@ -281,6 +290,9 @@ public class VentanCRUD extends javax.swing.JFrame {
     }//metodo para vaciar la tabla
     
     private void reinicarLabels(){
+        LblBanda.setForeground(Color.black);
+        LblADebut.setForeground(Color.black);
+        LblUAlbum.setForeground(Color.black);
         //reestablecen las etiquetas
         LblBanda.setText("Banda:");
         LblADebut.setText("Album Debut:");
